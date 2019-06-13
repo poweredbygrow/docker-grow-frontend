@@ -114,7 +114,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 		uuid-dev \
 	&& rm -rf /var/lib/apt/lists/*
 
-ENV PYTHON_VERSION 3.7.0
+ENV PYTHON_VERSION 3.7.3
 
 RUN set -ex \
 	\
@@ -182,7 +182,7 @@ RUN pip3 install pipenv
 ##############################################################################
 # Install Cloud SDK
 ##############################################################################
-ARG CLOUD_SDK_VERSION=208.0.0
+ARG CLOUD_SDK_VERSION=242.0.0
 RUN apt-get update \
   && apt-get install -y --no-install-recommends apt-transport-https
 RUN export CLOUD_SDK_REPO="cloud-sdk-stretch" \
@@ -222,3 +222,19 @@ RUN apt-get update \
 RUN nuget install GitVersion.CommandLine
 RUN sed -i 's/lib\/linux\/x86_64\/libgit2-15e1193.so/\/usr\/lib\/x86_64-linux-gnu\/libgit2.so.24/g' GitVersion.CommandLine.4.0.0/tools/LibGit2Sharp.dll.config
 COPY gitversion /usr/local/bin/gitversion
+
+##############################################################################
+# Set up Geckodriver
+##############################################################################
+
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends \
+  xvfb \
+  xauth \
+  firefox-esr
+
+RUN wget https://github.com/mozilla/geckodriver/releases/download/v0.24.0/geckodriver-v0.24.0-linux64.tar.gz
+RUN tar zxzf geckodriver-v0.24.0-linux64.tar.gz
+RUN rm geckodriver-v0.24.0-linux64.tar.gz
+RUN cp geckodriver /usr/local/bin/
+RUN rm -rf geckodriver
