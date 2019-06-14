@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-
-mono /GitVersion.CommandLine.4.0.0/tools/GitVersion.exe "$@"
